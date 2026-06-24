@@ -8,7 +8,27 @@
     </style>
   </head>
   <body>
+    <div style = "position: relative; display: inline-block;">
     <canvas id = "canvas" width = "800" height = "600"></canvas>
     <script type = "module" src = "/src/main.js"></script>
+    <!-- GPU Performance Stats Overlay-->
+     <div id = "gpu-stats" style = "
+      position :absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(0, 0, 0, 1);
+      color: #7881e5;
+      font-family: monospace;
+      font-size: 14px;
+      padding: 8px;
+      border-radius: 2px;
+      pointer-events: none;
+      z-index: 10;">
+      Initalizing GPU Timer...
+      </div>
+    </div>
+
+
+     
   </body>
 </html>
