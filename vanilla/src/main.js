@@ -15,8 +15,11 @@ out vec4 outColor;
 
 uniform float u_time;
 uniform sampler2D u_cameraTexture;
+
+uniform float u_pixelSize; // size of blocks
 void main(){
-  vec4 color = texture(u_cameraTexture, v_texCoord);
+  vec2 coord = floor(v_texCoord * u_pixelSize) / u_pixelSize;
+  vec4 color = texture(u_cameraTexture, coord);
   float gray = dot(color.rgb, vec3(0.299,0.587, 0.114));
   outColor = vec4(vec3(gray), color.a);
 }`
@@ -104,10 +107,9 @@ const extTimer = gl.getExtension('EXT_disjoint_timer_query_webgl2');
 if (!extTimer) {
   console.log('GPU Timer extension not supported on this browser/hardware.');
   statsDiv.innerHTML = "GPU timer not supported. sorry!";
-  statsFiv.style.color = '#ff3333';
+  statsDiv.style.color = '#ff3333';
 }
 let frameCount = 0;
-
 
 function render(time){
 
@@ -152,8 +154,14 @@ function render(time){
     gl.beginQuery(extTimer.TIME_ELAPSED_EXT, currentQuery);
   }
 
+  
   gl.useProgram(program);
-  gl.uniform1f(timeLocation, time); // send time to the GPU
+
+  //setting pixel size- MAYBE MAKE SHADER LATER? 
+  const pixelSizeLocation = gl.getUniformLocation(program, 'u_pixelSize');
+  gl.uniform1f(pixelSizeLocation, 150.0);
+
+  gl.uniform1f(timeLocation, timeInSeconds); // send time to the GPU
   gl.bindVertexArray(vao);
   gl.drawArrays(gl.TRIANGLES,0,6);
 
@@ -187,8 +195,9 @@ navigator.mediaDevices.getUserMedia({video : true}).then(stream => {
 //web gl2 texture
 const texture = gl.createTexture();
 gl.bindTexture(gl.TEXTURE_2D, texture);
-gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAX_FILTER, gl.LINEAR);
+//setting the magnification and minification filters to NEAREST
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
 //s and t mean x and y, clamp makes it stop at the last pixel 
 //gl_repeate makes it repeat when you go past (0,0) to (1,1)
 //gl_clamp_to_edge_ h
