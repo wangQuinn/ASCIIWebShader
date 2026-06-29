@@ -1,34 +1,118 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <style>
-      body { margin: 0; background: #111;}
-      canvas {display: block;}
-    </style>
-  </head>
-  <body>
-    <div style = "position: relative; display: inline-block;">
-    <canvas id = "canvas" width = "800" height = "600"></canvas>
-    <script type = "module" src = "/src/main.js"></script>
-    <!-- GPU Performance Stats Overlay-->
-     <div id = "gpu-stats" style = "
-      position :absolute;
-      top: 10px;
-      left: 10px;
-      background: rgba(0, 0, 0, 1);
-      color: #7881e5;
-      font-family: monospace;
-      font-size: 14px;
-      padding: 8px;
-      border-radius: 2px;
-      pointer-events: none;
-      z-index: 10;">
-      Initalizing GPU Timer...
-      </div>
-    </div>
+<head>
+<meta charset="UTF-8">
+<title>ASCII Webcam</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
+  body {
+    background: #0d0d0d;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: monospace;
+    color: #ccc;
+  }
 
-     
-  </body>
+  #controls {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    align-items: center;
+    font-size: 13px;
+  }
+
+  .ctrl-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  label { color: #888; }
+
+  input[type=range] {
+    width: 100px;
+    accent-color: #c87fff;
+  }
+
+  select, input[type=checkbox] {
+    accent-color: #c87fff;
+    background: #1a1a1a;
+    color: #ccc;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-family: monospace;
+    font-size: 13px;
+  }
+
+  #val-cols, #val-contrast, #val-gamma { color: #c87fff; min-width: 28px; }
+
+  #ascii-canvas {
+    display: block;
+    image-rendering: pixelated;
+  }
+
+  #hidden-canvas { display: none; }
+
+  #status {
+    margin-top: 14px;
+    font-size: 12px;
+    color: #555;
+  }
+</style>
+
+<script src = "src/main.js" defer> </script>
+</head>
+
+<body>
+
+<div id="controls">
+  <div class="ctrl-group">
+    <label>Columns</label>
+    <input type="range" id="cols" min="30" max="200" value="100">
+    <span id="val-cols">100</span>
+  </div>
+  <div class="ctrl-group">
+    <label>Contrast</label>
+    <input type="range" id="contrast" min="0.5" max="4" step="0.1" value="1.8">
+    <span id="val-contrast">1.8</span>
+  </div>
+  <div class="ctrl-group">
+    <label>Gamma</label>
+    <input type="range" id="gamma" min="0.5" max="3" step="0.1" value="1.2">
+    <span id="val-gamma">1.2</span>
+  </div>
+  <div class="ctrl-group">
+    <label>Charset</label>
+    <select id="charset">
+      <option value="default">Default dense</option>
+      <option value="blocks">Blocks</option>
+      <option value="minimal">Minimal</option>
+      <option value="symbols">Symbols</option>
+    </select>
+  </div>
+  <div class="ctrl-group">
+    <label>Color</label>
+    <input type="checkbox" id="color-mode" checked>
+  </div>
+  <div class="ctrl-group">
+    <label>Mirror</label>
+    <input type="checkbox" id="mirror" checked>
+  </div>
+  <div class="ctrl-group">
+    <label>Invert</label>
+    <input type="checkbox" id="invert">
+  </div>
+</div>
+
+<canvas id="ascii-canvas"></canvas>
+<canvas id="hidden-canvas"></canvas>
+<p id="status">Waiting for camera…</p>
+
+</body>
 </html>
