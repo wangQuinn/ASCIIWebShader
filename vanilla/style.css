@@ -1,0 +1,331 @@
+@import url("https://iosevka-webfonts.github.io/iosevka/Iosevka.css");
+
+:root {
+	--color-zinc-700: oklch(0.37 0.013 285.805);
+	--color-zinc-900: oklch(0.21 0.006 285.885);
+	--color-zinc-400: oklch(0.705 0.015 286.067);
+}
+
+:root {
+	--base: #c87fff; /* keeps your original accent color */
+	--title-font: "Iosevka Web", Helvetica, sans-serif;
+	--text-font: "Iosevka Web", "Open Sans", Helvetica, sans-serif;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	user-select: none;
+	box-sizing: border-box;
+	line-height: 1.5;
+}
+
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	width: 100%;
+	font-size: 16px;
+	font-family: var(--text-font);
+	color: #eee;
+	overflow: hidden;
+}
+
+body {
+	width: 100%;
+	height: 100vh;
+	overflow: hidden;
+	background: #161616;
+}
+
+/* ---------- floating settings panel (from  #container) ---------- */
+
+#container {
+	background-color: #0004;
+	backdrop-filter: blur(10px);
+	width: calc(min(100%, 440px) - 40px);
+	height: calc(100vh - 60px);
+	padding: 20px 30px 50px 30px;
+	overflow: auto;
+	position: absolute;
+	top: 30px;
+	right: 0;
+	border-radius: 20px 0 0 20px;
+	border: 2px solid var(--color-zinc-700);
+	border-right: none;
+
+	scrollbar-color: #fff4 #0004;
+	scrollbar-width: thin;
+	transition: transform 0.5s;
+}
+
+#container.hidden {
+	transform: translateX(100%);
+}
+
+/* ---------- toggler arrow (inline svg, no external asset needed) ---------- */
+
+#toggler {
+	position: absolute;
+	top: calc(50vh - 10px);
+	right: calc(min(100%, 340px) - 35px);
+	height: 25px;
+	width: auto;
+	transform: rotate(0);
+	transition:
+		transform 0.5s,
+		right 0.5s;
+	cursor: pointer;
+	filter: invert() opacity(0.8);
+	transition:
+		transform 0.5s,
+		right 0.5s,
+		filter 0.2s;
+}
+
+#toggler.hidden {
+	transform: rotate(180deg);
+	right: 5px;
+}
+
+#toggler:hover {
+	filter: invert() drop-shadow(-10px 0 0 var(--base)) drop-shadow(0 0 5px #fff8);
+}
+
+#toggler svg {
+	height: 25px;
+	width: auto;
+	display: block;
+	transition: transform 0.2s;
+}
+#toggler:hover svg {
+	transform: translateX(5px);
+}
+
+/* webkit scrollbar */
+::-webkit-scrollbar {
+	width: 10px;
+}
+::-webkit-scrollbar-track {
+	background: #0004;
+}
+::-webkit-scrollbar-thumb {
+	background: #fff4;
+}
+::-webkit-scrollbar-thumb:hover {
+	background: #fff3;
+}
+
+h1,
+h4 {
+	font-family: var(--title-font);
+	filter: drop-shadow(0 0 5px #fff6);
+}
+
+h1 {
+	font-size: 1.6em;
+	margin-bottom: 10px;
+}
+h4 {
+	font-size: 1.1em;
+	margin-bottom: 8px;
+	margin-top: 20px;
+}
+
+p {
+	margin-top: 10px;
+}
+
+/* ---------- slider css  ---------- */
+
+input[type="range"] {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 100%;
+	height: 8px;
+	background: #0008;
+	outline: none;
+	transition: background 0.2s;
+}
+
+input[type="range"]:hover {
+	background: #fff2;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+	appearance: none;
+	width: 16px;
+	height: 16px;
+	background: var(--base);
+	opacity: 0.8;
+	transition:
+		opacity 0.2s,
+		filter 0.2s;
+	border: 0;
+	border-radius: 2px;
+	cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+	opacity: 1;
+	filter: drop-shadow(0 0 5px #fff8);
+}
+
+input[type="range"]::-moz-range-thumb {
+	width: 16px;
+	height: 16px;
+	background: var(--base);
+	opacity: 0.8;
+	transition:
+		opacity 0.2s,
+		filter 0.2s;
+	border: 0;
+	border-radius: 2px;
+	cursor: pointer;
+}
+input[type="range"]::-moz-range-thumb:hover {
+	opacity: 1;
+	filter: drop-shadow(0 0 5px #fff8);
+}
+
+/* ---------- checkbox css  ---------- */
+
+input[type="checkbox"] {
+	opacity: 0;
+}
+
+label::before {
+	content: "";
+	display: inline-block;
+	height: 16px;
+	width: 16px;
+	background: #0008;
+	transition:
+		background 0.2s,
+		filter 0.2s;
+	position: absolute;
+	top: 3px;
+	left: -20px;
+	border-radius: 2px;
+	cursor: pointer;
+}
+input[type="checkbox"]:hover + label::before {
+	background: #fff2;
+	filter: drop-shadow(0 0 5px #fff8);
+}
+
+label::after {
+	content: "";
+	display: inline-block;
+	height: 5px;
+	width: 11px;
+	border-left: 2px solid;
+	border-bottom: 2px solid;
+	border-color: var(--base);
+	transform: rotate(-45deg);
+	transition:
+		opacity 0.1s,
+		border-color 0.2s;
+	opacity: 0;
+	position: absolute;
+	left: -17px;
+	top: 8px;
+	cursor: pointer;
+}
+input[type="checkbox"]:checked + label::after {
+	opacity: 0.8;
+}
+input[type="checkbox"]:checked:hover + label::after {
+	opacity: 1;
+}
+
+label {
+	position: relative;
+	margin-left: 20px; /* room for the checkbox pseudo-elements */
+}
+
+.check-row {
+	margin-top: 12px;
+}
+
+/* ---------- data value display ---------- */
+
+p:has([data-show]) {
+	display: flex;
+	align-items: baseline;
+	gap: 8px;
+}
+
+[data-show] {
+	font-weight: 600;
+	margin-left: auto;
+	color: var(--base);
+}
+
+/* ---------- select (charset dropdown) ---------- */
+
+select {
+	font-family: var(--text-font);
+	background: #0008;
+	color: #eee;
+	border: 2px solid var(--color-zinc-700);
+	border-radius: 6px;
+	padding: 4px 8px;
+	width: 100%;
+	margin-top: 4px;
+	cursor: pointer;
+}
+select:hover {
+	border-color: var(--base);
+}
+select:focus {
+	outline: none;
+	border-color: var(--base);
+}
+
+/* ---------- canvases ---------- */
+
+#canvases {
+	position: absolute;
+	top: 50%;
+	left: calc(50% - 170px); /* nudge left so the panel doesn't cover it */
+	transform: translate(-50%, -50%); 
+	/* inset: 0; */
+	display: flex;
+	justify-content: center;
+	gap: 16px;
+	align-items: flex-start;
+}
+
+#preview-camera {
+	width: 300px;
+	height: auto;
+	border-radius: 8px;
+	border: 2px solid var(--color-zinc-700);
+}
+
+#ascii-canvas {
+	image-rendering: pixelated;
+	border-radius: 8px;
+	border: 2px solid var(--color-zinc-700);
+}
+
+#hidden-canvas {
+	display: none;
+}
+
+#status {
+	margin-top: 20px;
+	font-size: 0.85em;
+	color: var(--color-zinc-400);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		transition-duration: 0s !important;
+		transition-delay: 0s !important;
+	}
+}

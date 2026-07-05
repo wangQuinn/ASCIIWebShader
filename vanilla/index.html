@@ -1,126 +1,90 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>ASCII Webcam</title>
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+		/>
+		<title>| ASCII Webcam |</title>
+		<link rel="stylesheet" href="./style.css" />
+	</head>
 
-  body {
-    background: #0d0d0d;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    font-family: monospace;
-    color: #ccc;
-  }
+	<body>
+		<div id="canvases">
+			<canvas id="preview-camera"></canvas>
+			<canvas id="ascii-canvas"></canvas>
+		</div>
+		<canvas id="hidden-canvas"></canvas>
 
-  #controls {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    margin-bottom: 16px;
-    align-items: center;
-    font-size: 13px;
-  }
+		<div id="container">
+			<h1>| ascii webcam |</h1>
 
-  .ctrl-group {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
+			<p id="status">Waiting for camera…</p>
 
-  label { color: #888; }
+			<h4>grid</h4>
 
-  input[type=range] {
-    width: 100px;
-    accent-color: #c87fff;
-  }
+			<p>columns <span data-show id="val-cols">150</span></p>
+			<input type="range" id="cols" min="30" max="200" value="150" />
 
-  select, input[type=checkbox] {
-    accent-color: #c87fff;
-    background: #1a1a1a;
-    color: #ccc;
-    border: 1px solid #333;
-    border-radius: 4px;
-    padding: 2px 6px;
-    font-family: monospace;
-    font-size: 13px;
-  }
+			<h4>image</h4>
 
-  #val-cols, #val-contrast, #val-gamma { color: #c87fff; min-width: 28px; }
+			<p>contrast <span data-show id="val-contrast">1.8</span></p>
+			<input
+				type="range"
+				id="contrast"
+				min="0.5"
+				max="4"
+				step="0.1"
+				value="1"
+			/>
 
-  #ascii-canvas {
-    display: block;
-    image-rendering: pixelated;
-  }
+			<p>gamma <span data-show id="val-gamma">1.2</span></p>
+			<input
+				type="range"
+				id="gamma"
+				min="0.5"
+				max="3"
+				step="0.1"
+				value="1"
+			/>
 
-  #preview-camera{
-    width: 500px;
-    height :auto;
-  }
+			<h4>rendering</h4>
 
-  #hidden-canvas { display: none; }
+			<p>charset</p>
+			<select id="charset">
+				<option value="default">default dense</option>
+				<option value="blocks">blocks</option>
+				<option value="minimal">minimal</option>
+				<option value="symbols">symbols</option>
+			</select>
 
-  #status {
-    margin-top: 14px;
-    font-size: 12px;
-    color: #555;
-  }
-</style>
+			<div class="check-row">
+				<input type="checkbox" id="color-mode" checked />
+				<label for="color-mode">color mode</label>
+			</div>
+			<div class="check-row">
+				<input type="checkbox" id="mirror" checked />
+				<label for="mirror">mirror</label>
+			</div>
+			<div class="check-row">
+				<input type="checkbox" id="invert" />
+				<label for="invert">invert</label>
+			</div>
+		</div>
 
-<script src = "src/main.js" defer> </script>
-</head>
+		<div id="toggler" data-click="toggleMenu">
+			<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path
+					d="M9 6l6 6-6 6"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				/>
+			</svg>
+		</div>
 
-<body>
-
-<div id="controls">
-  <div class="ctrl-group">
-    <label>Columns</label>
-    <input type="range" id="cols" min="30" max="200" value="100">
-    <span id="val-cols">100</span>
-  </div>
-  <div class="ctrl-group">
-    <label>Contrast</label>
-    <input type="range" id="contrast" min="0.5" max="4" step="0.1" value="1.8">
-    <span id="val-contrast">1.8</span>
-  </div>
-  <div class="ctrl-group">
-    <label>Gamma</label>
-    <input type="range" id="gamma" min="0.5" max="3" step="0.1" value="1.2">
-    <span id="val-gamma">1.2</span>
-  </div>
-  <div class="ctrl-group">
-    <label>Charset</label>
-    <select id="charset">
-      <option value="default">Default dense</option>
-      <option value="blocks">Blocks</option>
-      <option value="minimal">Minimal</option>
-      <option value="symbols">Symbols</option>
-    </select>
-  </div>
-  <div class="ctrl-group">
-    <label>Color</label>
-    <input type="checkbox" id="color-mode" checked>
-  </div>
-  <div class="ctrl-group">
-    <label>Mirror</label>
-    <input type="checkbox" id="mirror" checked>
-  </div>
-  <div class="ctrl-group">
-    <label>Invert</label>
-    <input type="checkbox" id="invert">
-  </div>
-</div>
-
-<div style = "display:flex; gap : 16px">
-  <canvas id = "preview-camera"></canvas>
-  <canvas id = "ascii-canvas"></canvas>
-</div>
-<canvas id="hidden-canvas"></canvas>
-<p id="status">Waiting for camera…</p>
-
-</body>
+		<script src="src/main.js" defer></script>
+	</body>
 </html>

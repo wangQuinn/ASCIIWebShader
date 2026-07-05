@@ -14,22 +14,19 @@ const COLOR_PALETTE = [
   [0.50, "#c87fff"],   // mid-tones
   [0.70, "#ff9fe8"],   // brighte
   [0.85, "#ffcfa0"],   // highlights
-  [1.00, "#ffffff"],   // brightest 
+  [1.00, "#ffffff"],   // brightest
 ];
 
-//states
-
+//states50
 let cfg = {
-  columns:   100,
-  contrast:  1.8,
-  gamma:     1.2,
+  columns:   150,
+  contrast:  1,
+  gamma:     1,
   charset:   "default",
   colorMode: true,
   mirror:    true,
   invert:    false,
 };
-
-
 
 const asciiCanvas = document.getElementById("ascii-canvas");
 const asciiCtx    = asciiCanvas.getContext("2d");
@@ -39,6 +36,7 @@ const hiddenCtx    = hiddenCanvas.getContext("2d");
 
 const previewCanvas = document.getElementById("preview-camera");
 const previewCtx = previewCanvas.getContext("2d");
+
 
 const fullCanvas = document.createElement("canvas");
 const fullCtx = fullCanvas.getContext("2d");
@@ -81,7 +79,7 @@ document.getElementById("invert").addEventListener("change", e => {
   cfg.invert = e.target.checked;
 });
 
-// VIDEO 
+// VIDEO
 const video = document.createElement("video");
 video.autoplay = true;
 video.playsInline = true;
@@ -98,7 +96,7 @@ navigator.mediaDevices.getUserMedia({ video: true })
     status.textContent = "Camera error: " + err.message;
   });
 
-//IMAGE PROCESSING 
+//IMAGE PROCESSING
 
 /**
  * Apply contrast + optional invert to a raw ImageData pixel array.
@@ -184,8 +182,6 @@ function render() {
   // Size the output canvas to fit all characters exactly
   asciiCanvas.width  = Math.ceil(cols * CHAR_W);
   asciiCanvas.height = Math.ceil(rows * CHAR_H);
-  fullCanvas.width = video.videoWidth;
-  fullCanvas.height = video.videoHeight;
 
   if(cfg.mirror){
     fullCtx.save();
@@ -199,6 +195,17 @@ if (cfg.mirror) fullCtx.restore();
 const fullImageData = fullCtx.getImageData(0, 0, video.videoWidth, video.videoHeight);
 extractBrightness(fullImageData, video.videoWidth, video.videoHeight, cfg.contrast, cfg.gamma, cfg.invert);
 fullCtx.putImageData(fullImageData, 0, 0);
+
+//set ratios
+video.addEventListener("loadedmetadata", () => {
+    previewCanvas.width = 300;
+    previewCanvas.height = video.videoHeight;
+    
+
+    fullCanvas.width = video.videoWidth;
+    fullCanvas.height = video.videoHeight;
+});
+
 
 // draw result into preview
 previewCtx.drawImage(fullCanvas, 0, 0, previewCanvas.width, previewCanvas.height);
@@ -225,3 +232,15 @@ previewCtx.drawImage(fullCanvas, 0, 0, previewCanvas.width, previewCanvas.height
   }
   requestAnimationFrame(render);
 }
+
+//  PANEL TOGGLE UI ///////////////////////////////
+
+const container = document.getElementById("container");
+const toggler = document.getElementById("toggler");
+
+function toggleMenu() {
+  container.classList.toggle("hidden");
+  toggler.classList.toggle("hidden");
+}
+
+toggler.addEventListener("click", toggleMenu);
