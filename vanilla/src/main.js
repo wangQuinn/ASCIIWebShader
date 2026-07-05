@@ -218,7 +218,7 @@ previewCtx.drawImage(fullCanvas, 0, 0, previewCanvas.width, previewCanvas.height
 
   const chars      = CHARSETS[cfg.charset] || CHARSETS.default;
   const lastI      = chars.length - 1;
-  const monoColor  = "#e0c8ff";
+  const monoColor  = "#c8ffd0";
 
   // Draw each character individually — no DOM, no GC, just GPU-bound fillText
   for (let y = 0; y < rows; y++) {
