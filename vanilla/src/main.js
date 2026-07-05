@@ -37,6 +37,12 @@ const status      = document.getElementById("status");
 const hiddenCanvas = document.getElementById("hidden-canvas");
 const hiddenCtx    = hiddenCanvas.getContext("2d");
 
+const previewCanvas = document.getElementById("preview-camera");
+const previewCtx = previewCanvas.getContext("2d");
+
+const fullCanvas = document.createElement("canvas");
+const fullCtx = fullCanvas.getContext("2d");
+
 
 // Measure a single character so we can size the output canvas exactly.
 // Change FONT_SIZE here to scale the whole output up or down.
@@ -58,9 +64,9 @@ function bindRange(id, key, valId, parse = parseFloat) {
   });
 }
 
-bindRange("cols",     "columns",  "val-cols",     parseInt);
+bindRange("cols", "columns",  "val-cols", parseInt);
 bindRange("contrast", "contrast", "val-contrast");
-bindRange("gamma",    "gamma",    "val-gamma");
+bindRange("gamma", "gamma", "val-gamma");
 
 document.getElementById("charset").addEventListener("change", e => {
   cfg.charset = e.target.value;
@@ -124,6 +130,11 @@ function extractBrightness(imageData, width, height, contrast, gamma, invert) {
     if (invert) norm = 1 - norm;
 
     result[i] = norm;
+
+    const out = Math.round(norm*255);
+    data[px] = out; //R
+    data[px + 1] = out; // G
+    data[px + 2] = out;
   }
   return result;
 }
@@ -162,6 +173,7 @@ function render() {
   hiddenCtx.drawImage(video, 0, 0, cols, rows);
   if (cfg.mirror) hiddenCtx.restore();
 
+
   // Extract brightness values
   const imageData  = hiddenCtx.getImageData(0, 0, cols, rows);
   const brightness = extractBrightness(
@@ -172,7 +184,24 @@ function render() {
   // Size the output canvas to fit all characters exactly
   asciiCanvas.width  = Math.ceil(cols * CHAR_W);
   asciiCanvas.height = Math.ceil(rows * CHAR_H);
+  fullCanvas.width = video.videoWidth;
+  fullCanvas.height = video.videoHeight;
 
+  if(cfg.mirror){
+    fullCtx.save();
+    fullCtx.translate(video.videoWidth, 0);
+    fullCtx.scale(-1,1);
+  }
+  fullCtx.drawImage(video, 0, 0);
+if (cfg.mirror) fullCtx.restore();
+
+// run the same processing pipeline
+const fullImageData = fullCtx.getImageData(0, 0, video.videoWidth, video.videoHeight);
+extractBrightness(fullImageData, video.videoWidth, video.videoHeight, cfg.contrast, cfg.gamma, cfg.invert);
+fullCtx.putImageData(fullImageData, 0, 0);
+
+// draw result into preview
+previewCtx.drawImage(fullCanvas, 0, 0, previewCanvas.width, previewCanvas.height);
   // Clear to background colour
   asciiCtx.fillStyle = "#0d0d0d";
   asciiCtx.fillRect(0, 0, asciiCanvas.width, asciiCanvas.height);
@@ -194,6 +223,5 @@ function render() {
       asciiCtx.fillText(ch, x * CHAR_W, y * CHAR_H);
     }
   }
-
   requestAnimationFrame(render);
 }

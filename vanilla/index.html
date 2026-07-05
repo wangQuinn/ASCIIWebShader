@@ -57,6 +57,11 @@
     image-rendering: pixelated;
   }
 
+  #preview-camera{
+    width: 500px;
+    height :auto;
+  }
+
   #hidden-canvas { display: none; }
 
   #status {
@@ -110,7 +115,10 @@
   </div>
 </div>
 
-<canvas id="ascii-canvas"></canvas>
+<div style = "display:flex; gap : 16px">
+  <canvas id = "preview-camera"></canvas>
+  <canvas id = "ascii-canvas"></canvas>
+</div>
 <canvas id="hidden-canvas"></canvas>
 <p id="status">Waiting for camera…</p>
 
