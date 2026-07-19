@@ -220,7 +220,7 @@ previewCtx.drawImage(fullCanvas, 0, 0, previewCanvas.width, previewCanvas.height
   const lastI      = chars.length - 1;
   const monoColor  = "#c8ffd0";
 
-  // Draw each character individually — no DOM, no GC, just GPU-bound fillText
+  // Draw each character individually  just GPU-bound fillText
   for (let y = 0; y < rows; y++) {
     for (let x = 0; x < cols; x++) {
       const b  = brightness[y * cols + x];
