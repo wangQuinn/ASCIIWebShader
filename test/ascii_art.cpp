@@ -341,7 +341,7 @@ void AsciiArt::differenceOfGaussian(float sigma, float scale, float tau, float t
 // combine
 
 void AsciiArt::combine(const AsciiArt& edge_data) {
-    // assumes both images share dimensions, as in the Python version
+
     for (int i = 0; i < height_; i += charSize_) {
         for (int j = 0; j < width_; j += charSize_) {
             float chunkSum = 0.0f;
@@ -371,13 +371,6 @@ void AsciiArt::getBloomData(float threshold, float stdev) {
     }
     bloomData_ = gaussianFilter(bloomData_, height_, width_, stdev);
 
-    // NOTE: like the Python original, bloom is computed at the
-    // pre-toAsciiArt() resolution and never upscaled to match the
-    // charSize_-times-larger output of toAsciiArt(). addBloomData() below
-    // only overlaps the top-left corner correctly -- this reproduces a real
-    // bug in the source rather than silently fixing it. If you want correct
-    // bloom, upscale bloomData_ by charSize_ (e.g. nearest-neighbor repeat)
-    // before calling addBloomData().
 }
 
 void AsciiArt::addBloomData() {
